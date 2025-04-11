@@ -27,7 +27,8 @@ article {
     text-align: center;
 }
 
-article img {
+article img,
+section img {
     object-fit: cover;
     border-radius: 100%;
 }
@@ -70,7 +71,14 @@ h2{
     font-size: 36px;
 }
 
-.photographer_section article img {
+.photographer_section article img,
+.photograph-header section img {
     height: 200px;
     width: 200px;
+}
+
+.photograph-details {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
