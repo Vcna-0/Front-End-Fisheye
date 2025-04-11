@@ -19,6 +19,32 @@ h1 {
     margin-right: 100px;
 }
 
+article {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 100px;
+    text-align: center;
+}
+
+article img {
+    object-fit: cover;
+    border-radius: 100%;
+}
+
+h2{
+    color: #D3573C;
+    text-wrap: nowrap;
+}
+
+.location{
+    color: #901C1C;
+}
+
+.price{
+    color: #757575;
+}
+
 .logo {
     height: 50px;
     margin-left: 100px;
