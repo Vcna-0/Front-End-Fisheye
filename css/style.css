@@ -77,8 +77,3 @@ h2{
     width: 200px;
 }
 
-.photograph-details {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
