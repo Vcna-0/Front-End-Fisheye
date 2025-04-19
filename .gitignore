@@ -1,2 +1,6 @@
 assets/medias/
 *.mp4
+node_modules/
+*.log
+*.env
+*.DS_Store

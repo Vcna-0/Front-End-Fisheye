@@ -1,11 +1,11 @@
 export function photographerTemplate(data) {
-    const { name, id, city, country, tagline, price, portrait } = data;
+   const { name, id, city, country, tagline, price, portrait } = data;
 
-    const picture = `assets/photographers/${portrait}`;
+   const picture = `assets/photographers/${portrait}`;
 
-    function getUserCardDOM() {
-        const article = document.createElement( 'article' );
-        article.innerHTML = `
+   function getUserCardDOM() {
+      const article = document.createElement('article');
+      article.innerHTML = `
             <a href="photographer.html?id=${id}" aria-label="${name}">
                 <img src="${picture}"">
                 <h2>${name}</h2>
@@ -14,13 +14,13 @@ export function photographerTemplate(data) {
                 <p class="tagline">${tagline}</p>
                 <p class="price">${price}€/jour</p>
         `;
-        return article;
-    }
+      return article;
+   }
 
-    function getUserDetailsDOM() {
-        const section = document.createElement( 'section' );
-     
-        section.innerHTML = `
+   function getUserDetailsDOM() {
+      const section = document.createElement('section');
+
+      section.innerHTML = `
             <div class="photograph-infos">
                 <h1>${name}</h1>
                 <p class="location">${city}, ${country}</p>
@@ -31,20 +31,8 @@ export function photographerTemplate(data) {
             <img class="" src="${picture}" alt="${name}">
         `;
 
+      return section;
+   }
 
-        const button = section.querySelector(".contact_button");
-        if (button) {
-            button.addEventListener("click", () => {
-                import('../utils/contactForm.js').then(module => {
-                    module.displayModal();
-                }).catch(err => {
-                    console.error("Erreur lors du chargement de displayModal", err);
-                });
-            });
-        }
-
-        return section;
-    }
-
-    return { name, picture, getUserCardDOM, getUserDetailsDOM }
+   return { name, picture, getUserCardDOM, getUserDetailsDOM };
 }
