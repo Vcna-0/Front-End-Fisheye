@@ -1,79 +1,77 @@
-@import url("photographer.css");
+@import url('photographer.css');
 
 body {
-    font-family: "DM Sans", sans-serif;
-    margin: 0;
+   font-family: 'DM Sans', sans-serif;
+   margin: 0;
 }
 
-
 header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    height: 90px;
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+   align-items: center;
+   height: 90px;
 }
 
 h1 {
-    color: #901C1C;
-    margin-right: 100px;
+   color: #901c1c;
+   margin-right: 100px;
 }
 
-article {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 100px;
-    text-align: center;
+.photographer-card {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   margin-top: 100px;
+   text-align: center;
 }
 
-article img,
-section img {
-    object-fit: cover;
-    border-radius: 100%;
+.photographer-card img,
+.photograph-header img {
+   object-fit: cover;
+   border-radius: 100%;
 }
 
-h2{
-    color: #D3573C;
-    text-wrap: nowrap;
+h2 {
+   color: #d3573c;
+   text-wrap: nowrap;
 }
 
-.location{
-    color: #901C1C;
+.location {
+   color: #901c1c;
 }
 
-.price{
-    color: #757575;
+.price {
+   color: #757575;
 }
 
 .logo {
-    height: 50px;
-    margin-left: 100px;
+   height: 50px;
+   margin-left: 100px;
 }
 
 .photographer_section {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 70px;
-    margin-top: 100px;
+   display: grid;
+   grid-template-columns: 1fr 1fr 1fr;
+   gap: 70px;
+   margin-top: 100px;
 }
 
 .photographer_section article {
-    justify-self: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+   justify-self: center;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
 }
 
 .photographer_section article h2 {
-    color: #D3573C;
-    font-size: 36px;
+   color: #d3573c;
+   font-size: 36px;
 }
 
 .photographer_section article img,
 .photograph-header section img {
-    height: 200px;
-    width: 200px;
+   height: 200px;
+   width: 200px;
 }
-

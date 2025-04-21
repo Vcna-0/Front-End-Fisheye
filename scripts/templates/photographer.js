@@ -5,11 +5,12 @@ export function photographerTemplate(data) {
 
    function getUserCardDOM() {
       const article = document.createElement('article');
+      article.classList.add('photographer-card');
       article.innerHTML = `
             <a href="photographer.html?id=${id}" aria-label="${name}">
                 <img src="${picture}"">
                 <h2>${name}</h2>
-            <a/>    
+            </a>    
                 <p class="location">${city}, ${country}</p>
                 <p class="tagline">${tagline}</p>
                 <p class="price">${price}€/jour</p>
@@ -19,6 +20,7 @@ export function photographerTemplate(data) {
 
    function getUserDetailsDOM() {
       const section = document.createElement('section');
+      section.classList.add('photograph-header');
 
       section.innerHTML = `
             <div class="photograph-infos">
