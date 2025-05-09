@@ -1,17 +1,15 @@
 export function lightboxTemplate(initialList, startIndex = 0) {
-   console.log('initialList', initialList);
    let mediaList = initialList;
    let currentIndex = startIndex;
    let lightboxElement;
 
-   function createLightboxDOM() {
-      lightboxElement = document.createElement('div');
-      lightboxElement.classList.add('lightbox');
-      lightboxElement.classList.add('hidden');
-      lightboxElement.setAttribute('aria-hidden', 'true');
-      lightboxElement.setAttribute('role', 'dialog');
-      lightboxElement.setAttribute('aria-label', 'Vue agrandie du média');
-      lightboxElement.innerHTML = `
+   function createLightboxElement() {
+      const element = document.createElement('div');
+      element.className = 'lightbox hidden';
+      element.setAttribute('role', 'dialog');
+      element.setAttribute('aria-hidden', 'true');
+      element.setAttribute('aria-label', 'Vue agrandie du média');
+      element.innerHTML = `
          <button class="lightbox-close" aria-label="Fermer la lightbox">&times;</button>
          <div class="lightbox-content">
             <button class="lightbox-prev" aria-label="Média précédent">&#10094;</button>
@@ -19,54 +17,58 @@ export function lightboxTemplate(initialList, startIndex = 0) {
             <button class="lightbox-next" aria-label="Média suivant">&#10095;</button>
          </div>
       `;
+      document.body.appendChild(element);
+      return element;
+   }
 
-      document.body.appendChild(lightboxElement);
-
+   function attachLightboxEvents() {
       lightboxElement.querySelector('.lightbox-close').addEventListener('click', close);
       lightboxElement.querySelector('.lightbox-next').addEventListener('click', showNext);
       lightboxElement.querySelector('.lightbox-prev').addEventListener('click', showPrev);
-
       document.addEventListener('keydown', handleKeydown);
+   }
 
-      return lightboxElement;
+   function toggleVisibility(element, show) {
+      element.classList.toggle('hidden', !show);
+      element.setAttribute('aria-hidden', String(!show));
    }
 
    function open(index = 0) {
       currentIndex = index;
       updateContent();
+
       const main = document.querySelector('main');
       const header = document.querySelector('header');
-      main.setAttribute('aria-hidden', 'true');
-      main.classList.add('hidden');
-      header.setAttribute('aria-hidden', 'true');
-      header.classList.add('hidden');
-      lightboxElement.setAttribute('aria-hidden', 'false');
-      lightboxElement.classList.remove('hidden');
+      toggleVisibility(main, false);
+      toggleVisibility(header, false);
+      toggleVisibility(lightboxElement, true);
    }
 
    function close() {
       const main = document.querySelector('main');
-      main.setAttribute('aria-hidden', 'false');
-      main.classList.remove('hidden');
       const header = document.querySelector('header');
-      header.setAttribute('aria-hidden', 'false');
-      header.classList.remove('hidden');
-      lightboxElement.setAttribute('aria-hidden', 'true');
-      lightboxElement.classList.add('hidden');
+      toggleVisibility(main, true);
+      toggleVisibility(header, true);
+      toggleVisibility(lightboxElement, false);
+   }
+
+   function getMediaSrc(media) {
+      const fileName = media.image ?? media.video;
+      return `assets/medias/${media.photographerName}/${fileName}`;
+   }
+
+   function renderMedia(container, media) {
+      const src = getMediaSrc(media);
+      const html = media.video
+         ? `<video controls autoplay><source src="${src}" type="video/mp4"></video>`
+         : `<img src="${src}" alt="${media.title}">`;
+      container.innerHTML = `${html}<p>${media.title}</p>`;
    }
 
    function updateContent() {
-      const media = mediaList[currentIndex];
-      const folderName = media.photographerName;
-      const fileName = media.image ?? media.video;
-      const src = `assets/medias/${folderName}/${fileName}`;
-      const isVideo = !!media.video;
       const container = lightboxElement.querySelector('.lightbox-media-container');
-
-      console.log('Chargement du média depuis :', src);
-      container.innerHTML = isVideo
-         ? `<video controls autoplay><source src="${src}" type="video/mp4"></video><p>${media.title}</p>`
-         : `<img src="${src}" alt="${media.title}"><p>${media.title}</p>`;
+      const media = mediaList[currentIndex];
+      renderMedia(container, media);
    }
 
    function showNext() {
@@ -79,14 +81,25 @@ export function lightboxTemplate(initialList, startIndex = 0) {
       updateContent();
    }
 
+   function handleKeydown(e) {
+      switch (e.key) {
+         case 'Escape':
+            return close();
+         case 'ArrowRight':
+            return showNext();
+         case 'ArrowLeft':
+            return showPrev();
+      }
+   }
+
    function updateMediaList(newList) {
       mediaList = newList;
    }
 
-   function handleKeydown(e) {
-      if (e.key === 'Escape') close();
-      if (e.key === 'ArrowRight') showNext();
-      if (e.key === 'ArrowLeft') showPrev();
+   function createLightboxDOM() {
+      lightboxElement = createLightboxElement();
+      attachLightboxEvents();
+      return lightboxElement;
    }
 
    return {
