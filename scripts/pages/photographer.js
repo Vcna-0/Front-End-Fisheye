@@ -1,120 +1,144 @@
 import { getPhotographers, getMedia } from '../utils/dataService.js';
 import { photographerTemplate } from '../templates/photographer.js';
-import { mediaTemplate } from '../templates/media.js';
+import { mediaFactory } from '../templates/media.js';
 import { lightboxTemplate } from '../templates/lightbox.js';
 import { contactFormTemplate } from '../templates/contactForm.js';
-import { displayModal } from '../utils/contactForm.js';
-import { closeModal } from '../utils/contactForm.js';
+import { displayModal, closeModal } from '../utils/contactForm.js';
 
 function getPhotographerIdFromURL() {
    const urlParams = new URLSearchParams(window.location.search);
    return parseInt(urlParams.get('id'));
 }
 
-async function displayPhotographerDetails(photographerData) {
-   const photographersSection = document.querySelector('.photograph-header');
-
-   const photographerModel = photographerTemplate(photographerData);
-   const userDetailsDOM = photographerModel.getUserDetailsDOM();
-   photographersSection.appendChild(userDetailsDOM);
-
-   const contactButton = document.querySelector('.contact_button');
-   contactButton.addEventListener('click', displayModal);
+function addEventListenerToSelector(selector, event, handler) {
+   const element = document.querySelector(selector);
+   if (element) element.addEventListener(event, handler);
 }
 
-function displayPhotographerMedia(photographerMedias, photographerData) {
-   const mediaSection = document.querySelector('.photograph-media');
+function renderPhotographerHeader(photographerData) {
+   const headerSection = document.querySelector('.photograph-header');
+   const photographerModel = photographerTemplate(photographerData);
+   const userDetailsDOM = photographerModel.getUserDetailsDOM();
+   headerSection.appendChild(userDetailsDOM);
 
-   const mediaListWithName = photographerMedias.map((media) => ({
+   addEventListenerToSelector('.contact_button', 'click', displayModal);
+}
+
+function enrichMediaList(mediaList, photographerName) {
+   return mediaList.map((media) => ({
       ...media,
-      photographerName: photographerData.name,
+      photographerName,
    }));
+}
 
-   const totalLikesElement = document.querySelector('.total-likes');
+function sortMediaList(mediaList, sortBy) {
+   const sorted = [...mediaList];
 
-   function updateTotalLikes() {
-      const total = mediaListWithName.reduce((sum, media) => sum + media.likes, 0);
-      totalLikesElement.textContent = total;
+   switch (sortBy) {
+      case 'popularity':
+         return sorted.sort((a, b) => b.likes - a.likes);
+      case 'date':
+         return sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
+      case 'title':
+         return sorted.sort((a, b) => a.title.localeCompare(b.title));
+      default:
+         return sorted;
    }
+}
 
-   const lightbox = lightboxTemplate(mediaListWithName);
+function setupSortListener(mediaList, render) {
+   const sortSelect = document.getElementById('sort-select');
+   if (!sortSelect) return;
+
+   sortSelect.addEventListener('change', (e) => {
+      const sorted = sortMediaList(mediaList, e.target.value);
+      render(sorted);
+   });
+}
+
+function updateTotalLikes(mediaList) {
+   const totalLikes = mediaList.reduce((sum, media) => sum + media.likes, 0);
+   const likesElement = document.querySelector('.total-likes');
+   if (likesElement) likesElement.textContent = totalLikes;
+}
+
+function renderMediaGallery(mediaList, photographerData, lightboxInstance, updateLikes) {
+   const mediaSection = document.querySelector('.photograph-media');
+   mediaSection.innerHTML = '';
+   lightboxInstance.updateMediaList(mediaList);
+
+   mediaList.forEach((mediaData, index) => {
+      // const media = mediaTemplate(mediaData, photographerData, index, lightboxInstance, updateLikes);
+      const media = mediaFactory(mediaData, photographerData, index, lightboxInstance, updateLikes);
+      mediaSection.appendChild(media.getMediaDOM());
+   });
+
+   document.querySelectorAll('.media-card img, .media-card video').forEach((el, index) => {
+      el.addEventListener('click', () => lightboxInstance.open(index));
+   });
+}
+
+function setupPhotographerMedia(mediaList, photographerData) {
+   const enrichedMediaList = enrichMediaList(mediaList, photographerData.name);
+   const lightbox = lightboxTemplate(enrichedMediaList);
    lightbox.getLightboxDOM();
 
-   // function renderMedias(photographerMedias) {
-   //    mediaSection.innerHTML = '';
-   //    console.log('photographerMedias', photographerMedias);
+   const render = (currentList) => {
+      renderMediaGallery(currentList, photographerData, lightbox, () => updateTotalLikes(currentList));
+      updateTotalLikes(currentList);
+   };
 
-   //    photographerMedias.forEach((mediaData, index) => {
-   //       const media = mediaTemplate(mediaData, photographerData, index, lightbox, updateTotalLikes);
-   //       const mediaDOM = media.getMediaDOM();
-   //       mediaSection.appendChild(mediaDOM);
-   //    });
+   render(enrichedMediaList);
+   setupSortListener(enrichedMediaList, render);
+}
 
-   //    document.querySelectorAll('.media-card img, .media-card video').forEach((el, index) => {
-   //       el.addEventListener('click', () => lightbox.open(index));
-   //    });
-   // }
+// function setupContactForm(photographerName) {
+//    const form = contactFormTemplate(photographerName);
+//    document.body.appendChild(form.getFormDOM());
+//    addEventListenerToSelector('.close_modal', 'click', closeModal);
+// }
 
-   function renderMedias(currentMediaList) {
-      mediaSection.innerHTML = '';
-      console.log('currentMediaList', currentMediaList);
+function setupContactForm(photographerName) {
+   const formWrapper = contactFormTemplate(photographerName);
+   const formDOM = formWrapper.getFormDOM();
+   document.body.appendChild(formDOM);
 
-      lightbox.updateMediaList(currentMediaList);
+   // Ajouter fermeture modal
+   const closeButton = formDOM.querySelector('.close_modal');
+   closeButton.addEventListener('click', closeModal);
 
-      currentMediaList.forEach((mediaData, index) => {
-         const media = mediaTemplate(mediaData, photographerData, index, lightbox, updateTotalLikes);
-         const mediaDOM = media.getMediaDOM();
-         mediaSection.appendChild(mediaDOM);
-      });
+   // Ajouter Soumission et console log ici
+   const form = formDOM.querySelector('form');
+   form.addEventListener('submit', function (event) {
+      event.preventDefault();
 
-      document.querySelectorAll('.media-card img, .media-card video').forEach((el, index) => {
-         el.addEventListener('click', () => lightbox.open(index));
-      });
-   }
+      const prenom = form.querySelector('#prenom').value;
+      const nom = form.querySelector('#nom').value;
+      const email = form.querySelector('#email').value;
+      const message = form.querySelector('#message').value;
 
-   renderMedias(mediaListWithName);
-   updateTotalLikes();
-
-   const sortSelect = document.getElementById('sort-select');
-   sortSelect.addEventListener('change', (e) => {
-      const sortBy = e.target.value;
-
-      let sortedMedias = [...mediaListWithName];
-
-      if (sortBy === 'popularity') {
-         sortedMedias.sort((a, b) => b.likes - a.likes);
-      } else if (sortBy === 'date') {
-         sortedMedias.sort((a, b) => new Date(b.date) - new Date(a.date));
-      } else if (sortBy === 'title') {
-         sortedMedias.sort((a, b) => (a.title > b.title) - (a.title < b.title));
-      }
-
-      renderMedias(sortedMedias);
+      console.log('Prénom :', prenom);
+      console.log('Nom :', nom);
+      console.log('Email :', email);
+      console.log('Message :', message);
    });
 }
 
 export async function init() {
    const photographerId = getPhotographerIdFromURL();
-
-   if (!photographerId) {
-      console.error('Photographer ID not found in URL');
-      return;
-   }
+   if (!photographerId) return console.error('Photographer ID not found in URL');
 
    const photographers = await getPhotographers();
    const photographerData = photographers.find((p) => p.id === photographerId);
+   if (!photographerData) return console.error('Photographer not found');
 
-   displayPhotographerDetails(photographerData);
+   renderPhotographerHeader(photographerData);
 
    const media = await getMedia();
-   const photographerMedias = media.filter((m) => m.photographerId === photographerId);
+   const photographerMedia = media.filter((m) => m.photographerId === photographerId);
+   setupPhotographerMedia(photographerMedia, photographerData);
 
-   displayPhotographerMedia(photographerMedias, photographerData);
-
-   const contactForm = contactFormTemplate(photographerData.name);
-   document.body.appendChild(contactForm.getFormDOM());
-   const closeBtn = document.querySelector('.close_modal');
-   if (closeBtn) closeBtn.addEventListener('click', closeModal);
+   setupContactForm(photographerData.name);
 }
 
 init();

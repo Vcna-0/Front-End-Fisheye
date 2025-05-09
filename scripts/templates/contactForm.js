@@ -8,7 +8,7 @@ export function contactFormTemplate(photographerName) {
 
       wrapper.innerHTML = `
          <div class="modal">
-            <header>
+            <header class="modal_header">
                <h2 id="contact_modal_title">Contactez-moi <span id="photographer-name">${photographerName}</span></h2>
                <button class="close_modal" aria-label="Fermer le formulaire de contact">
                   <img src="assets/icons/close.svg" alt="">
