@@ -23,15 +23,21 @@ export function photographerTemplate(data) {
       section.classList.add('photograph-header');
 
       section.innerHTML = `
-            <div class="photograph-infos">
-                <h1>${name}</h1>
-                <p class="location">${city}, ${country}</p>
-                <p class="tagline">${tagline}</p>
+         <div class="photograph-infos">
+            <h1>${name}</h1>
+            <p class="location">${city}, ${country}</p>
+            <p class="tagline">${tagline}</p>
+         </div>
+         <button class="contact_button">Contactez-moi</button>
+         <div class="photograph-stats">
+            <div class="photographer-likes">
+               <span class="total-likes">0</span>
+               <i class="fas fa-heart"></i>
             </div>
-            <button class="contact_button">Contactez-moi</button>
             <p class="price-footer">${price}€/jour</p>
-            <img class="" src="${picture}" alt="${name}">
-        `;
+         </div>
+         <img class="" src="${picture}" alt="${name}">
+     `;
 
       return section;
    }
