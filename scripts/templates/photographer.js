@@ -1,34 +1,35 @@
-export function photographerTemplate(data) {
-   const { name, id, city, country, tagline, price, portrait } = data;
+export function photographerTemplate(dataPhotographer) {
+   const { name, id, city, country, tagline, price, portrait } = dataPhotographer;
 
    const picture = `assets/photographers/${portrait}`;
 
    function getUserCardDOM() {
-      const article = document.createElement('article');
-      article.classList.add('photographer-card');
-      article.innerHTML = `
+      const photographerCard = document.createElement('article');
+      photographerCard.classList.add('photographer-card');
+      photographerCard.innerHTML = `
             <a href="photographer.html?id=${id}" aria-label="${name}">
-                <img src="${picture}"">
+                <img src="${picture}" alt="${name}">
                 <h2>${name}</h2>
             </a>    
                 <p class="location">${city}, ${country}</p>
                 <p class="tagline">${tagline}</p>
                 <p class="price">${price}€/jour</p>
         `;
-      return article;
+      return photographerCard;
    }
 
    function getUserDetailsDOM() {
-      const section = document.createElement('section');
-      section.classList.add('photograph-header');
+      const photographHeader = document.createElement('section');
+      photographHeader.classList.add('photograph-header');
 
-      section.innerHTML = `
+      photographHeader.innerHTML = `
          <div class="photograph-infos">
             <h1>${name}</h1>
             <p class="location">${city}, ${country}</p>
             <p class="tagline">${tagline}</p>
          </div>
-         <button class="contact_button">Contactez-moi</button>
+            <button class="contact_button" typ  e="button">Contactez-moi</button>
+            <img class="portrait" src="${picture}" alt="${name}">
          <div class="photograph-stats">
             <div class="photographer-likes">
                <span class="total-likes">0</span>
@@ -36,10 +37,9 @@ export function photographerTemplate(data) {
             </div>
             <p class="price-footer">${price}€/jour</p>
          </div>
-         <img class="" src="${picture}" alt="${name}">
      `;
 
-      return section;
+      return photographHeader;
    }
 
    return { name, picture, getUserCardDOM, getUserDetailsDOM };

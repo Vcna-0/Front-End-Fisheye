@@ -10,7 +10,7 @@ export function contactFormTemplate(photographerName) {
          <div class="modal">
             <header class="modal_header">
                <h2 id="contact_modal_title">Contactez-moi <span id="photographer-name">${photographerName}</span></h2>
-               <button class="close_modal" aria-label="Fermer le formulaire de contact">
+               <button type="button" class="close_modal" aria-label="Fermer le formulaire de contact">
                   <img src="assets/icons/close.svg" alt="">
                </button>
             </header>
@@ -31,7 +31,7 @@ export function contactFormTemplate(photographerName) {
                   <label for="message">Votre message</label>
                   <textarea id="message" name="message" rows="5" required></textarea>
                </div>
-               <button class="contact_button" type="submit">Envoyer</button>
+               <button type="button" class="contact_button" type="submit" aria-label="Envoyer le formulaire">Envoyer</button>
             </form>
          </div>
       `;

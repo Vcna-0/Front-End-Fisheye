@@ -25,9 +25,3 @@ export function closeModal() {
    modal.setAttribute('aria-hidden', 'true');
    modal.classList.add('hidden');
 }
-
-const openBtn = document.querySelector('.contact_button');
-if (openBtn) openBtn.addEventListener('click', displayModal);
-
-const closeBtn = document.querySelector('.close_modal');
-if (closeBtn) closeBtn.addEventListener('click', closeModal);

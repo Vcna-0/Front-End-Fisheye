@@ -1,11 +1,27 @@
 export async function getPhotographers() {
-   const response = await fetch('data/photographers.json');
-   const data = await response.json();
-   return data.photographers;
+   try {
+      const response = await fetch('data/photographers.json');
+      if (!response.ok) {
+         throw new Error(`Erreur lors du chargement des données`);
+      }
+      const data = await response.json();
+      return data.photographers;
+   } catch (error) {
+      console.error('Erreur lors du chargement des photographes:', error);
+      throw error;
+   }
 }
 
 export async function getMedia() {
-   const response = await fetch('data/photographers.json');
-   const data = await response.json();
-   return data.media;
+   try {
+      const response = await fetch('data/photographers.json');
+      if (!response.ok) {
+         throw new Error(`Erreur lors du chargement des données`);
+      }
+      const data = await response.json();
+      return data.media;
+   } catch (error) {
+      console.error('Erreur lors du chargement des médias:', error);
+      throw error;
+   }
 }

@@ -10,11 +10,11 @@ export function lightboxTemplate(initialList, startIndex = 0) {
       element.setAttribute('aria-hidden', 'true');
       element.setAttribute('aria-label', 'Vue agrandie du média');
       element.innerHTML = `
-         <button class="lightbox-close" aria-label="Fermer la lightbox">&times;</button>
+         <button type="button" class="lightbox-close" aria-label="Fermer la lightbox">&times;</button>
          <div class="lightbox-content">
-            <button class="lightbox-prev" aria-label="Média précédent">&#10094;</button>
+            <button type="button" class="lightbox-prev" aria-label="Média précédent">&#10094;</button>
             <div class="lightbox-media-container"></div>
-            <button class="lightbox-next" aria-label="Média suivant">&#10095;</button>
+            <button type="button" class="lightbox-next" aria-label="Média suivant">&#10095;</button>
          </div>
       `;
       document.body.appendChild(element);

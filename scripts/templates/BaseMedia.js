@@ -13,11 +13,33 @@ export class BaseMedia {
       return `assets/medias/${this.photographerData.name}/${fileName}`;
    }
 
-   createCommonElements() {
-      const { title, likes } = this.mediaData;
+   createMediaElement() {
+      throw new Error('createMediaElement must be implemented by subclass');
+   }
 
-      const article = document.createElement('article');
-      article.className = 'media-card';
+   createMediaContainer() {
+      const { title } = this.mediaData;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'media-container';
+
+      const link = document.createElement('a');
+      link.href = '#';
+      link.className = 'media-link';
+      link.tabIndex = 0;
+      link.setAttribute('aria-label', `Voir ${title}`);
+
+      const mediaElement = this.createMediaElement();
+      link.appendChild(mediaElement);
+      wrapper.appendChild(link);
+
+      this.setupLightboxEvents(link);
+
+      return wrapper;
+   }
+
+   createInfoSection() {
+      const { title, likes } = this.mediaData;
 
       const info = document.createElement('div');
       info.className = 'media-info';
@@ -25,6 +47,13 @@ export class BaseMedia {
       const titleEl = document.createElement('h3');
       titleEl.textContent = title;
 
+      const likesContainer = this.createLikesContainer(title, likes);
+      info.append(titleEl, likesContainer);
+
+      return info;
+   }
+
+   createLikesContainer(title, likes) {
       const likesContainer = document.createElement('div');
       likesContainer.className = 'likes';
 
@@ -39,38 +68,56 @@ export class BaseMedia {
       likeIcon.setAttribute('role', 'button');
 
       likesContainer.append(likeCount, likeIcon);
-      info.append(titleEl, likesContainer);
-
       this.setupLikeEvents(likeIcon, likeCount);
 
-      return { article, info, likeCount, likeIcon };
+      return likesContainer;
+   }
+
+   getMediaDOM() {
+      const article = document.createElement('article');
+      article.className = 'media-card';
+
+      const mediaContainer = this.createMediaContainer();
+      const infoSection = this.createInfoSection();
+
+      article.append(mediaContainer, infoSection);
+
+      return article;
    }
 
    setupLightboxEvents(link) {
-      const open = (e) => {
-         if (e.type === 'click' || e.key === 'Enter' || e.key === ' ') {
+      const handleOpen = (e) => {
+         if (this.isValidInteraction(e)) {
             e.preventDefault();
             this.lightbox.open(this.index);
          }
       };
 
-      link.addEventListener('click', open);
-      link.addEventListener('keydown', open);
+      link.addEventListener('click', handleOpen);
+      link.addEventListener('keydown', handleOpen);
    }
 
    setupLikeEvents(likeIcon, likeCount) {
-      const toggleLike = (e) => {
-         if (e.type === 'click' || e.key === 'Enter' || e.key === ' ') {
+      const handleToggleLike = (e) => {
+         if (this.isValidInteraction(e)) {
             e.preventDefault();
-            this.liked = !this.liked;
-            this.mediaData.likes += this.liked ? 1 : -1;
-            likeCount.textContent = this.mediaData.likes;
-            likeIcon.classList.toggle('liked', this.liked);
-            this.updateTotalLikes();
+            this.toggleLike(likeCount, likeIcon);
          }
       };
 
-      likeIcon.addEventListener('click', toggleLike);
-      likeIcon.addEventListener('keydown', toggleLike);
+      likeIcon.addEventListener('click', handleToggleLike);
+      likeIcon.addEventListener('keydown', handleToggleLike);
+   }
+
+   toggleLike(likeCount, likeIcon) {
+      this.liked = !this.liked;
+      this.mediaData.likes += this.liked ? 1 : -1;
+      likeCount.textContent = this.mediaData.likes;
+      likeIcon.classList.toggle('liked', this.liked);
+      this.updateTotalLikes();
+   }
+
+   isValidInteraction(e) {
+      return e.type === 'click' || e.key === 'Enter' || e.key === ' ';
    }
 }

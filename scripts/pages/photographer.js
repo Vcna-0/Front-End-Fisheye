@@ -5,14 +5,18 @@ import { lightboxTemplate } from '../templates/lightbox.js';
 import { contactFormTemplate } from '../templates/contactForm.js';
 import { displayModal, closeModal } from '../utils/contactForm.js';
 
+let currentMediaList = [];
+let currentPhotographerData = null;
+let currentLightbox = null;
+
+function renderMedia(mediaList) {
+   renderMediaGallery(mediaList, currentPhotographerData, currentLightbox, () => updateTotalLikes(mediaList));
+   updateTotalLikes(mediaList);
+}
+
 function getPhotographerIdFromURL() {
    const urlParams = new URLSearchParams(window.location.search);
    return parseInt(urlParams.get('id'));
-}
-
-function addEventListenerToSelector(selector, event, handler) {
-   const element = document.querySelector(selector);
-   if (element) element.addEventListener(event, handler);
 }
 
 function renderPhotographerHeader(photographerData) {
@@ -21,7 +25,11 @@ function renderPhotographerHeader(photographerData) {
    const userDetailsDOM = photographerModel.getUserDetailsDOM();
    headerSection.appendChild(userDetailsDOM);
 
-   addEventListenerToSelector('.contact_button', 'click', displayModal);
+   const contactButton = document.querySelector('.contact_button');
+   if (!contactButton) return;
+   contactButton.addEventListener('click', () => {
+      displayModal();
+   });
 }
 
 function enrichMediaList(mediaList, photographerName) {
@@ -33,7 +41,6 @@ function enrichMediaList(mediaList, photographerName) {
 
 function sortMediaList(mediaList, sortBy) {
    const sorted = [...mediaList];
-
    switch (sortBy) {
       case 'popularity':
          return sorted.sort((a, b) => b.likes - a.likes);
@@ -46,13 +53,13 @@ function sortMediaList(mediaList, sortBy) {
    }
 }
 
-function setupSortListener(mediaList, render) {
+function setupSortListener() {
    const sortSelect = document.getElementById('sort-select');
    if (!sortSelect) return;
 
    sortSelect.addEventListener('change', (e) => {
-      const sorted = sortMediaList(mediaList, e.target.value);
-      render(sorted);
+      const sorted = sortMediaList(currentMediaList, e.target.value);
+      renderMedia(sorted);
    });
 }
 
@@ -68,7 +75,6 @@ function renderMediaGallery(mediaList, photographerData, lightboxInstance, updat
    lightboxInstance.updateMediaList(mediaList);
 
    mediaList.forEach((mediaData, index) => {
-      // const media = mediaTemplate(mediaData, photographerData, index, lightboxInstance, updateLikes);
       const media = mediaFactory(mediaData, photographerData, index, lightboxInstance, updateLikes);
       mediaSection.appendChild(media.getMediaDOM());
    });
@@ -79,35 +85,23 @@ function renderMediaGallery(mediaList, photographerData, lightboxInstance, updat
 }
 
 function setupPhotographerMedia(mediaList, photographerData) {
-   const enrichedMediaList = enrichMediaList(mediaList, photographerData.name);
-   const lightbox = lightboxTemplate(enrichedMediaList);
-   lightbox.getLightboxDOM();
+   currentMediaList = enrichMediaList(mediaList, photographerData.name);
+   currentPhotographerData = photographerData;
+   currentLightbox = lightboxTemplate(currentMediaList);
+   currentLightbox.getLightboxDOM();
 
-   const render = (currentList) => {
-      renderMediaGallery(currentList, photographerData, lightbox, () => updateTotalLikes(currentList));
-      updateTotalLikes(currentList);
-   };
-
-   render(enrichedMediaList);
-   setupSortListener(enrichedMediaList, render);
+   renderMedia(currentMediaList);
+   setupSortListener();
 }
-
-// function setupContactForm(photographerName) {
-//    const form = contactFormTemplate(photographerName);
-//    document.body.appendChild(form.getFormDOM());
-//    addEventListenerToSelector('.close_modal', 'click', closeModal);
-// }
 
 function setupContactForm(photographerName) {
    const formWrapper = contactFormTemplate(photographerName);
    const formDOM = formWrapper.getFormDOM();
    document.body.appendChild(formDOM);
 
-   // Ajouter fermeture modal
    const closeButton = formDOM.querySelector('.close_modal');
    closeButton.addEventListener('click', closeModal);
 
-   // Ajouter Soumission et console log ici
    const form = formDOM.querySelector('form');
    form.addEventListener('submit', function (event) {
       event.preventDefault();
@@ -134,8 +128,8 @@ export async function init() {
 
    renderPhotographerHeader(photographerData);
 
-   const media = await getMedia();
-   const photographerMedia = media.filter((m) => m.photographerId === photographerId);
+   const allMedia = await getMedia();
+   const photographerMedia = allMedia.filter((m) => m.photographerId === photographerId);
    setupPhotographerMedia(photographerMedia, photographerData);
 
    setupContactForm(photographerData.name);

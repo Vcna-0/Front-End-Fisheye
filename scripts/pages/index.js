@@ -1,20 +1,20 @@
 import { getPhotographers } from '../utils/dataService.js';
 import { photographerTemplate } from '../templates/photographer.js';
 
-async function displayData(photographers) {
-   const photographersSection = document.querySelector('.photographer_section');
+async function displayData(allPhotographers) {
+   const photographersSectionDOM = document.querySelector('.photographer_section');
 
-   photographers.forEach((photographer) => {
+   allPhotographers.forEach((photographer) => {
       const photographerModel = photographerTemplate(photographer);
       const userCardDOM = photographerModel.getUserCardDOM();
-      photographersSection.appendChild(userCardDOM);
+      photographersSectionDOM.appendChild(userCardDOM);
    });
 }
 
-// Récupère les datas des photographes
+// Récupère les datas de tous les photographes
 async function init() {
-   const photographers = await getPhotographers();
-   displayData(photographers);
+   const allPhotographers = await getPhotographers();
+   displayData(allPhotographers);
 }
 
 init();

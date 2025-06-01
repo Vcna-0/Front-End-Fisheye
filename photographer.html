@@ -9,13 +9,46 @@
    </head>
    <body>
       <header aria-hidden="false">
-         <a href="index.html" alt="Fisheye Home page"><img src="assets/images/logo.png" class="logo" alt="fisheye logo" /></a>
+         <a href="index.html" aria-label="Fisheye Home page"><img src="assets/images/logo.png" class="logo" alt="fisheye logo" /></a>
       </header>
       <main id="main" aria-hidden="false">
          <div class="photograph-header"></div>
          <div class="sort-menu">
-            <label for="sort-select">Trier par</label>
-            <select class="sort-select" id="sort-select">
+            <label for="sort-select" id="sort-label">Trier par</label>
+            <!-- Select personnalisé -->
+            <div class="custom-select" id="customSelect">
+               <button class="select-button" id="selectButton" 
+                       aria-haspopup="listbox" 
+                       aria-expanded="false"
+                       aria-labelledby="sort-label"
+                       tabindex="0">
+                   <span class="selected-text">Popularité</span>
+                   <div class="select-arrow"></div>
+               </button>
+               <div class="select-dropdown" 
+                    id="selectDropdown"
+                    role="listbox"
+                    aria-labelledby="sort-label">
+                   <div class="select-option selected" 
+                        data-value="popularity" 
+                        role="option"
+                        aria-selected="true"
+                        tabindex="-1">Popularité</div>
+                   <div class="select-option" 
+                        data-value="date" 
+                        role="option"
+                        aria-selected="false"
+                        tabindex="-1">Date</div>
+                   <div class="select-option" 
+                        data-value="title" 
+                        role="option"
+                        aria-selected="false"
+                        tabindex="-1">Titre</div>
+               </div>
+           </div>
+           <!-- Fin du select personnalisé -->
+            </div>
+            <select class="native-select" id="sort-select" name="sort">
                <option value="popularity">Popularité</option>
                <option value="date">Date</option>
                <option value="title">Titre</option>
@@ -25,6 +58,7 @@
       </main>
       <script type="module" src="/scripts/pages/photographer.js"></script>
       <script type="module" src="/scripts/utils/contactForm.js"></script>
+      <script type="module" src="/scripts/utils/dropdown.js"></script>
       <script src="https://kit.fontawesome.com/b3f7717dd0.js" crossorigin="anonymous"></script>
    </body>
 </html>
