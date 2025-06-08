@@ -31,7 +31,7 @@ export function contactFormTemplate(photographerName) {
                   <label for="message">Votre message</label>
                   <textarea id="message" name="message" rows="5" required></textarea>
                </div>
-               <button type="button" class="contact_button" type="submit" aria-label="Envoyer le formulaire">Envoyer</button>
+               <button class="contact_button" type="submit" aria-label="Envoyer le formulaire">Envoyer</button>
             </form>
          </div>
       `;

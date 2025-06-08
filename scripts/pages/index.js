@@ -1,4 +1,4 @@
-import { getPhotographers } from '../utils/dataService.js';
+import { getPhotographers } from '../services/dataService.js';
 import { photographerTemplate } from '../templates/photographer.js';
 
 async function displayData(allPhotographers) {

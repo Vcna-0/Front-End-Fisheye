@@ -1,9 +1,9 @@
-import { getPhotographers, getMedia } from '../utils/dataService.js';
+import { getPhotographers, getMedia } from '../services/dataService.js';
 import { photographerTemplate } from '../templates/photographer.js';
 import { mediaFactory } from '../templates/media.js';
 import { lightboxTemplate } from '../templates/lightbox.js';
 import { contactFormTemplate } from '../templates/contactForm.js';
-import { displayModal, closeModal } from '../utils/contactForm.js';
+import { displayModal, closeModal } from '../controllers/modalController.js';
 
 let currentMediaList = [];
 let currentPhotographerData = null;
@@ -115,6 +115,10 @@ function setupContactForm(photographerName) {
       console.log('Nom :', nom);
       console.log('Email :', email);
       console.log('Message :', message);
+
+      closeModal();
+      form.reset();
+      alert(`Merci ${prenom} ${nom}, votre message a été envoyé !`);
    });
 }
 
