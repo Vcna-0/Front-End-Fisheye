@@ -1,6 +1,6 @@
-import { BaseMedia } from './BaseMedia.js';
+import { mediaTemplate } from '../templates/mediaTemplate.js';
 
-export class VideoMedia extends BaseMedia {
+export class VideoMedia extends mediaTemplate {
    createMediaElement() {
       const video = document.createElement('video');
       const source = document.createElement('source');

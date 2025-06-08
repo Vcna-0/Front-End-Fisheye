@@ -1,6 +1,6 @@
-import { BaseMedia } from './BaseMedia.js';
+import { mediaTemplate } from '../templates/mediaTemplate.js';
 
-export class PhotoMedia extends BaseMedia {
+export class PhotoMedia extends mediaTemplate {
    createMediaElement() {
       const { title } = this.mediaData;
 

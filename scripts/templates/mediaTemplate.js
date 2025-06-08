@@ -1,4 +1,4 @@
-export class BaseMedia {
+export class mediaTemplate {
    constructor(mediaData, photographerData, index, lightbox, updateTotalLikes) {
       this.mediaData = mediaData;
       this.photographerData = photographerData;

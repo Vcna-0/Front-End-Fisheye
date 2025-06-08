@@ -1,5 +1,5 @@
-import { PhotoMedia } from './PhotoMedia.js';
-import { VideoMedia } from './VideoMedia.js';
+import { PhotoMedia } from '../models/PhotoMedia.js';
+import { VideoMedia } from '../models/VideoMedia.js';
 
 export function mediaFactory(mediaData, photographerData, index, lightbox, updateTotalLikes) {
    const { image, video } = mediaData;

@@ -1,8 +1,8 @@
 import { getPhotographers, getMedia } from '../services/dataService.js';
-import { photographerTemplate } from '../templates/photographer.js';
-import { mediaFactory } from '../templates/media.js';
-import { lightboxTemplate } from '../templates/lightbox.js';
-import { contactFormTemplate } from '../templates/contactForm.js';
+import { photographerTemplate } from '../templates/photographerTemplate.js';
+import { mediaFactory } from '../factory/mediaFactory.js';
+import { createLightbox } from '../controllers/lightboxController.js';
+import { contactFormTemplate } from '../templates/contactFormTemplate.js';
 import { displayModal, closeModal } from '../controllers/modalController.js';
 
 let currentMediaList = [];
@@ -87,8 +87,8 @@ function renderMediaGallery(mediaList, photographerData, lightboxInstance, updat
 function setupPhotographerMedia(mediaList, photographerData) {
    currentMediaList = enrichMediaList(mediaList, photographerData.name);
    currentPhotographerData = photographerData;
-   currentLightbox = lightboxTemplate(currentMediaList);
-   currentLightbox.getLightboxDOM();
+   currentLightbox = createLightbox(currentMediaList);
+   document.body.appendChild(currentLightbox.getDOM());
 
    renderMedia(currentMediaList);
    setupSortListener();
