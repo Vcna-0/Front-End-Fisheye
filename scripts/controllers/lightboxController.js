@@ -19,9 +19,16 @@ export function createLightbox(initialList, startIndex = 0) {
    prevButton.addEventListener('click', showPrev);
    document.addEventListener('keydown', handleKeydown);
 
-   function toggleVisibility(element, show) {
-      element.classList.toggle('hidden', !show);
-      element.setAttribute('aria-hidden', String(!show));
+   function toggleElementVisibility(element, isVisible, useHiddenClass = false) {
+      if (!element) return;
+
+      if (useHiddenClass) {
+         element.classList.toggle('hidden', !isVisible);
+      } else {
+         element.style.display = isVisible ? '' : 'none';
+      }
+
+      element.setAttribute('aria-hidden', String(!isVisible));
    }
 
    function open(index = 0) {
@@ -31,18 +38,20 @@ export function createLightbox(initialList, startIndex = 0) {
       const main = document.querySelector('main');
       const header = document.querySelector('header');
 
-      toggleVisibility(main, false);
-      toggleVisibility(header, false);
-      toggleVisibility(lightboxElement, true);
+      toggleElementVisibility(main, false);
+      toggleElementVisibility(header, false);
+
+      toggleElementVisibility(lightboxElement, true, true);
    }
 
    function close() {
       const main = document.querySelector('main');
       const header = document.querySelector('header');
 
-      toggleVisibility(main, true);
-      toggleVisibility(header, true);
-      toggleVisibility(lightboxElement, false);
+      toggleElementVisibility(main, true);
+      toggleElementVisibility(header, true);
+
+      toggleElementVisibility(lightboxElement, false, true);
    }
 
    function getMediaSrc(media) {
