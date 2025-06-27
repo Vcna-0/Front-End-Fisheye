@@ -1,4 +1,4 @@
-import { mediaTemplate } from '../templates/mediaTemplate.js';
+import { mediaTemplate } from './mediaTemplate.js';
 
 export class VideoMedia extends mediaTemplate {
    createMediaElement() {

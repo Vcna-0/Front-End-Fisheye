@@ -4,3 +4,8 @@ node_modules/
 *.log
 *.env
 *.DS_Store
+Microsoft/
+WindowsPowerShell/
+PSReadLine/
+ModuleAnalysisCache
+consoleHost_history.txt

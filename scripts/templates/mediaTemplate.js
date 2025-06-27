@@ -1,3 +1,5 @@
+import { LikeController } from '../controllers/likeController.js';
+
 export class mediaTemplate {
    constructor(mediaData, photographerData, index, lightbox, updateTotalLikes) {
       this.mediaData = mediaData;
@@ -5,7 +7,7 @@ export class mediaTemplate {
       this.index = index;
       this.lightbox = lightbox;
       this.updateTotalLikes = updateTotalLikes;
-      this.liked = false;
+      this.likeController = new LikeController(mediaData, updateTotalLikes);
    }
 
    getMediaPath() {
@@ -47,30 +49,10 @@ export class mediaTemplate {
       const titleEl = document.createElement('h3');
       titleEl.textContent = title;
 
-      const likesContainer = this.createLikesContainer(title, likes);
+      const likesContainer = this.likeController.createLikesContainer(title, likes);
       info.append(titleEl, likesContainer);
 
       return info;
-   }
-
-   createLikesContainer(title, likes) {
-      const likesContainer = document.createElement('div');
-      likesContainer.className = 'likes';
-
-      const likeCount = document.createElement('span');
-      likeCount.className = 'likes-count';
-      likeCount.textContent = likes;
-
-      const likeIcon = document.createElement('i');
-      likeIcon.className = 'fas fa-heart like-icon';
-      likeIcon.tabIndex = 0;
-      likeIcon.setAttribute('aria-label', `Aimer ${title}`);
-      likeIcon.setAttribute('role', 'button');
-
-      likesContainer.append(likeCount, likeIcon);
-      this.setupLikeEvents(likeIcon, likeCount);
-
-      return likesContainer;
    }
 
    getMediaDOM() {
@@ -95,26 +77,6 @@ export class mediaTemplate {
 
       link.addEventListener('click', handleOpen);
       link.addEventListener('keydown', handleOpen);
-   }
-
-   setupLikeEvents(likeIcon, likeCount) {
-      const handleToggleLike = (e) => {
-         if (this.isValidInteraction(e)) {
-            e.preventDefault();
-            this.toggleLike(likeCount, likeIcon);
-         }
-      };
-
-      likeIcon.addEventListener('click', handleToggleLike);
-      likeIcon.addEventListener('keydown', handleToggleLike);
-   }
-
-   toggleLike(likeCount, likeIcon) {
-      this.liked = !this.liked;
-      this.mediaData.likes += this.liked ? 1 : -1;
-      likeCount.textContent = this.mediaData.likes;
-      likeIcon.classList.toggle('liked', this.liked);
-      this.updateTotalLikes();
    }
 
    isValidInteraction(e) {
