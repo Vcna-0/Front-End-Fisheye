@@ -11,7 +11,7 @@ export function photographerTemplate(dataPhotographer) {
                 <img src="${picture}" alt="${name}">
                 <h2>${name}</h2>
             </a>    
-                <p class="location">${city}, ${country}</p>
+                <h3 class="location">${city}, ${country}</h3>
                 <p class="tagline">${tagline}</p>
                 <p class="price">${price}€/jour</p>
         `;
@@ -25,7 +25,7 @@ export function photographerTemplate(dataPhotographer) {
       photographHeader.innerHTML = `
          <div class="photograph-infos">
             <h1>${name}</h1>
-            <p class="location">${city}, ${country}</p>
+            <h2 class="location">${city}, ${country}</h2>
             <p class="tagline">${tagline}</p>
          </div>
             <button class="contact_button" typ  e="button">Contactez-moi</button>

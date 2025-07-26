@@ -40,7 +40,6 @@ export function createLightbox(initialList, startIndex = 0) {
 
       toggleElementVisibility(main, false);
       toggleElementVisibility(header, false);
-
       toggleElementVisibility(lightboxElement, true, true);
    }
 
@@ -50,7 +49,6 @@ export function createLightbox(initialList, startIndex = 0) {
 
       toggleElementVisibility(main, true);
       toggleElementVisibility(header, true);
-
       toggleElementVisibility(lightboxElement, false, true);
    }
 

@@ -1,6 +1,6 @@
 import { getPhotographers, getMedia } from '../services/dataService.js';
 import { photographerTemplate } from '../templates/photographerTemplate.js';
-import { mediaFactory } from '../factory/mediaFactory.js';
+import { mediaFactory } from '../templates/mediaFactory.js';
 import { createLightbox } from '../controllers/lightboxController.js';
 import { contactFormTemplate } from '../templates/contactFormTemplate.js';
 import { displayModal, closeModal } from '../controllers/modalController.js';
